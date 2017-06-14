@@ -4,6 +4,10 @@ import Button from './base/Button'
 import {UserState} from '../reducers/StateTypes'
 import {QuestDetails} from '../reducers/QuestTypes'
 
+
+
+import Payment from './Payment'
+
 export interface FeaturedQuestsStateProps {
   players: number;
   quests: QuestDetails[];
@@ -32,6 +36,12 @@ const FeaturedQuests = (props: FeaturedQuestsProps): JSX.Element => {
 
   return (
     <Card title="Select Your Quest" icon="adventurer">
+      <Payment
+        amount={1.15}
+        onError={(err: string) => { console.log(err); }}
+        onPaymentMethodReceived={() => {}}
+        onReady={() => {}}
+      />
       {items}
       <Button onTouchTap={() => props.onSearchSelect(props.user, props.players)}>
         <div className="advanced_play">

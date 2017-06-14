@@ -1,7 +1,7 @@
-import * as React from 'react';
-import IconButton from 'material-ui/IconButton';
-import ChevronLeft from 'material-ui/svg-icons/navigation/chevron-left';
-import ChevronRight from 'material-ui/svg-icons/navigation/chevron-right';
+import * as React from 'react'
+import IconButton from 'material-ui/IconButton'
+import ChevronLeft from 'material-ui/svg-icons/navigation/chevron-left'
+import ChevronRight from 'material-ui/svg-icons/navigation/chevron-right'
 
 interface PickerProps extends React.Props<any> {
   value: number | string;

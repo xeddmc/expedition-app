@@ -12,7 +12,6 @@ import {QuestState, SettingsType, UserState, UserFeedbackState} from '../reducer
 
 declare var window:any;
 
-
 export interface QuestEndStateProps {
   quest: QuestState;
   settings: SettingsType;
@@ -29,6 +28,7 @@ export interface QuestEndDispatchProps {
 export interface QuestEndProps extends QuestEndStateProps, QuestEndDispatchProps {};
 
 export default class QuestEnd extends React.Component<QuestEndProps, {}> {
+
   render() {
     const loggedIn = (this.props.user && this.props.user.loggedIn);
     const rated = (this.props.userFeedback.rating > 0);
