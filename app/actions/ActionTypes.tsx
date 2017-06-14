@@ -1,5 +1,5 @@
 import Redux from 'redux'
-import {CardState, CardName, SettingNameType, SearchPhase, SearchSettings, SettingsType, TransitionType, UserState} from '../reducers/StateTypes'
+import {CardState, CardName, CheckoutState, SettingNameType, SearchPhase, SearchSettings, SettingsType, TransitionType, UserState} from '../reducers/StateTypes'
 import {QuestDetails} from '../reducers/QuestTypes'
 import {ParserNode} from '../parser/Node'
 
@@ -70,6 +70,15 @@ export interface SnackbarOpenAction extends Redux.Action {
 
 export interface SnackbarCloseAction extends Redux.Action {
   type: 'SNACKBAR_CLOSE';
+}
+
+export interface CheckoutBraintreeLoadedAction extends Redux.Action {
+  type: 'CHECKOUT_BRAINTREE_LOADED';
+  token: string;
+}
+
+export interface CheckoutSetStateAction extends Redux.Action, CheckoutState {
+  type: 'CHECKOUT_SET_STATE';
 }
 
 export interface QuestCardAction {}

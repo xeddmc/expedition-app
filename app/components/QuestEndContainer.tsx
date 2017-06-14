@@ -2,6 +2,7 @@ import Redux from 'redux'
 import {connect} from 'react-redux'
 import QuestEnd, {QuestEndStateProps, QuestEndDispatchProps} from './QuestEnd'
 import {toCard, toPrevious} from '../actions/Card'
+import {checkoutSetState} from '../actions/Checkout'
 import {login} from '../actions/User'
 import {userFeedbackChange} from '../actions/UserFeedback'
 import {submitUserFeedback} from '../actions/Web'
@@ -27,6 +28,10 @@ const mapDispatchToProps = (dispatch: Redux.Dispatch<any>, ownProps: any): Quest
       change[key] = value;
       dispatch(userFeedbackChange(change));
     },
+    onTip: (amount: number, quest: QuestState, user: UserState) => {
+      dispatch(checkoutSetState({amount, productcategory: 'Quest Tip', productid: quest.details.id}));
+      dispatch(toCard('CHECKOUT'));
+    },
     onShare: (quest: QuestState) => {
       const options = {
         message: `I just had a blast playing the Expedition quest ${quest.details.title}! #ExpeditionRPG`, // not supported on some apps (Facebook, Instagram)
@@ -36,8 +41,8 @@ const mapDispatchToProps = (dispatch: Redux.Dispatch<any>, ownProps: any): Quest
       const onSuccess = function(result: any) {
         window.FirebasePlugin.logEvent('share', Object.assign({}, quest.details, {app: result.app}));
       }
-      const onError = function(msg: string) {
-        window.FirebasePlugin.logEvent('share_error', {error: msg});
+      const onError = function(err: string) {
+        window.FirebasePlugin.logEvent('share_error', {error: err});
       }
       window.plugins.socialsharing.shareWithOptions(options, onSuccess, onError);
     },

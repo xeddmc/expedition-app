@@ -31,6 +31,7 @@ try {
 // Custom components
 import {authSettings} from './Constants'
 import {toPrevious} from './actions/Card'
+import {loadBraintreeToken} from './actions/Checkout'
 import {silentLogin} from './actions/User'
 import {getStore} from './Store'
 
@@ -113,6 +114,8 @@ let render = () => {
   );
 }
 render();
+
+getStore().dispatch(loadBraintreeToken());
 
 if (module.hot) {
   module.hot.accept();

@@ -1,5 +1,6 @@
 import Redux from 'redux'
 import {card} from './Card'
+import {checkout} from './Checkout'
 import {quest} from './Quest'
 import {search} from './Search'
 import {settings} from './Settings'
@@ -13,6 +14,7 @@ function combinedReduce(state: AppStateWithHistory, action: Redux.Action): AppSt
   state = state || ({} as AppStateWithHistory);
   return {
     card: card(state.card, action),
+    checkout: checkout(state.checkout, action),
     quest: quest(state.quest, action),
     search: search(state.search, action),
     settings: settings(state.settings, action),
@@ -41,7 +43,7 @@ export default function combinedReducerWithHistory(state: AppStateWithHistory, a
 
       let returnAction = action as ReturnAction;
       if (returnAction.to && (returnAction.to.name || returnAction.to.phase)) {
-        while(pastStateIdx > 0 && !isReturnState(state._history[pastStateIdx], returnAction)) {
+        while (pastStateIdx > 0 && !isReturnState(state._history[pastStateIdx], returnAction)) {
           pastStateIdx--;
         }
       }

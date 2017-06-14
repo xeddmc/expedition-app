@@ -23,6 +23,7 @@ export interface QuestEndDispatchProps {
   onChange: (key: string, value: any) => void;
   onShare: (quest: QuestState) => void;
   onSubmit: (quest: QuestState, settings: SettingsType, user: UserState, userFeedback: UserFeedbackState) => void;
+  onTip: (amount: number, quest: QuestState, user: UserState) => void;
 }
 
 export interface QuestEndProps extends QuestEndStateProps, QuestEndDispatchProps {};
@@ -54,6 +55,16 @@ export default class QuestEnd extends React.Component<QuestEndProps, {}> {
             />
           </div>
         }
+        Tip the author:
+        <Button onTouchTap={() => this.props.onTip(1, this.props.quest, this.props.user)}>
+          $1
+        </Button>
+        <Button onTouchTap={() => this.props.onTip(3, this.props.quest, this.props.user)}>
+          $3
+        </Button>
+        <Button onTouchTap={() => this.props.onTip(5, this.props.quest, this.props.user)}>
+          $5
+        </Button>
         <Button onTouchTap={() => this.props.onSubmit(this.props.quest, this.props.settings, this.props.user, this.props.userFeedback)}>
           {rated ? 'Submit' : 'Return home'}
         </Button>

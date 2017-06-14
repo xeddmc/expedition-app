@@ -1,8 +1,16 @@
 import {QuestDetails, DifficultyType, QuestContext} from './QuestTypes'
 import {TemplatePhase} from '../cardtemplates/Template'
 import {ParserNode} from '../parser/Node'
-
 import {GenreType, ContentRatingLabelType} from '../Constants'
+
+export type CheckoutPhase = 'LOADING' | 'ENTRY' | 'DONE';
+export interface CheckoutState {
+  amount: number;
+  braintreeToken: string;
+  phase: CheckoutPhase;
+  productcategory: string;
+  productid: string;
+}
 
 export type SettingNameType = 'numPlayers' | 'difficulty' | 'viewMode';
 
@@ -40,7 +48,7 @@ export interface SnackbarState {
   timeout?: number;
 }
 
-export type CardName = 'PLAYER_COUNT_SETTING' | 'QUEST_START' | 'QUEST_END' | 'QUEST_CARD' | 'FEATURED_QUESTS' | 'SPLASH_CARD' | 'SEARCH_CARD' | 'SETTINGS' | 'ADVANCED' | 'REPORT';
+export type CardName = 'CHECKOUT' | 'PLAYER_COUNT_SETTING' | 'QUEST_START' | 'QUEST_END' | 'QUEST_CARD' | 'FEATURED_QUESTS' | 'SPLASH_CARD' | 'SEARCH_CARD' | 'SETTINGS' | 'ADVANCED' | 'REPORT';
 export type CardPhase = TemplatePhase | SearchPhase;
 export interface CardState {
   name: CardName;
@@ -78,6 +86,7 @@ export interface UserFeedbackState {
 
 export interface AppState {
   card: CardState;
+  checkout: CheckoutState;
   quest: QuestState;
   search: SearchState;
   settings: SettingsType;
