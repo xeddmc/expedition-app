@@ -23,11 +23,11 @@ export interface CheckoutDispatchProps {
 export interface CheckoutProps extends CheckoutStateProps, CheckoutDispatchProps {}
 
 export default class Checkout extends React.Component<CheckoutProps, {}> {
-  state: { braintreeInstance: any };
+  state: { braintreeInstance: any, paymentValid: boolean };
 
   constructor(props: CheckoutProps) {
     super(props);
-    this.state = { braintreeInstance: null };
+    this.state = { braintreeInstance: null, paymentValid: false };
   }
 
   componentDidMount () {
@@ -41,18 +41,21 @@ export default class Checkout extends React.Component<CheckoutProps, {}> {
       //   amount: this.props.checkout.amount,
       //   currency: 'USD',
       // },
-    }, (err: string, instance: Object) => {
+    }, (err: string, instance: any) => {
       if (err) {
         return this.props.onError(err);
       }
-      this.setState({braintreeInstance: instance});
+      instance.on('paymentMethodRequestable', () => { this.setState({ paymentValid: true })});
+      instance.on('noPaymentMethodRequestable', () => { this.setState({ paymentValid: false })});
+      this.setState({
+        braintreeInstance: instance,
+        paymentValid: instance.isPaymentMethodRequestable(), // starts valid if existing customer w/ saved payment
+      });
       this.props.onPhaseChange('ENTRY');
     });
   }
 
   render() {
-    const isInitialized = this.state.braintreeInstance !== null;
-    const isLoading = this.props.checkout.phase === 'LOADING';
     switch (this.props.checkout.phase) {
       case 'LOADING':
         return (
@@ -70,8 +73,8 @@ export default class Checkout extends React.Component<CheckoutProps, {}> {
               <div id="braintreeDropin"></div>
                 <div>
                   <div id="checkoutTotal">Total: ${this.props.checkout.amount.toFixed(2)}</div>
-                  <Button id="braintreeSubmit" disabled={isLoading} onTouchTap={() => this.props.onSubmit(this.state.braintreeInstance, this.props.checkout, this.props.user)}>
-                    {(isLoading) ? 'Loading...' : 'Pay'}
+                  <Button id="braintreeSubmit" disabled={!this.state.paymentValid} onTouchTap={() => this.props.onSubmit(this.state.braintreeInstance, this.props.checkout, this.props.user)}>
+                    {(this.state.paymentValid) ? 'Pay' : 'Enter payment info'}
                   </Button>
                 </div>
             </div>
