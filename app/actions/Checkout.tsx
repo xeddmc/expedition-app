@@ -1,8 +1,8 @@
 import Redux from 'redux'
-import {authSettings} from '../Constants'
-
 import {CheckoutBraintreeLoadedAction, CheckoutSetStateAction} from './ActionTypes'
 import {openSnackbar} from './Snackbar'
+import {authSettings} from '../Constants'
+import {logEvent} from '../React'
 
 declare var window:any;
 const braintree = require('braintree-web');
@@ -21,7 +21,7 @@ export function loadBraintreeToken() {
           dispatch({type: 'CHECKOUT_BRAINTREE_LOADED', token} as CheckoutBraintreeLoadedAction);
         })
         .fail((xhr: any, error: string) => {
-          window.FirebasePlugin.logEvent('braintree_error', error);
+          logEvent('braintree_load_error', error);
         });
   };
 }
