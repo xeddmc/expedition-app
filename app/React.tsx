@@ -24,11 +24,22 @@ function setupTapEvents() {
 }
 
 export function logEvent(name: string, args: any): void {
+  console.log('Event log: ' + name, args);
   getWindow().FirebasePlugin.logEvent(name, args);
-
   const ga = getGA();
   if (ga) {
-    ga('send', 'event', name);
+    const event: any = {
+      hitType: 'event',
+      eventCategory: 'log',
+      eventAction: name,
+    };
+    if (typeof args === 'string') {
+      event.eventLabel = args;
+    }
+    if (typeof args === 'number') {
+      event.eventValue = args;
+    }
+    ga('send', event);
   }
 }
 
@@ -140,7 +151,7 @@ declare var ga: any;
 function setupGoogleAnalytics() {
   const window = getWindow();
   const document = getDocument();
-  // Enable Google Analytics if we're not dev'ing locally
+  // Don't enable Google Analytics if we're dev'ing locally
   if (window.location.hostname === 'localhost') {
     return;
   }

@@ -2,7 +2,7 @@ import Redux from 'redux'
 import {connect} from 'react-redux'
 import QuestEnd, {QuestEndStateProps, QuestEndDispatchProps} from './QuestEnd'
 import {toCard, toPrevious} from '../actions/Card'
-import {checkoutSetState} from '../actions/Checkout'
+import {checkoutSetState, toCheckout} from '../actions/Checkout'
 import {login} from '../actions/User'
 import {userFeedbackChange} from '../actions/UserFeedback'
 import {submitUserFeedback} from '../actions/Web'
@@ -30,7 +30,7 @@ const mapDispatchToProps = (dispatch: Redux.Dispatch<any>, ownProps: any): Quest
     },
     onTip: (amount: number, quest: QuestState, user: UserState) => {
       dispatch(checkoutSetState({amount, productcategory: 'Quest Tip', productid: quest.details.id}));
-      dispatch(toCard('CHECKOUT'));
+      dispatch(toCheckout(user, amount));
     },
     onShare: (quest: QuestState) => {
       const options = {

@@ -2,6 +2,7 @@ import Redux from 'redux'
 import {toCard} from './Card'
 import {openSnackbar} from '../actions/Snackbar'
 import {UserState} from '../reducers/StateTypes'
+import {initialState} from '../reducers/User'
 import {authSettings} from '../Constants'
 
 declare var gapi: any;
@@ -92,6 +93,7 @@ export function silentLogin(callback: () => any) {
   return (dispatch: Redux.Dispatch<any>): any => {
     let loginCallback: UserLoginCallback = (user: UserState, err?: string) => {
       // Since it's silent, do nothing with error
+      user = user || initialState;
       dispatch({type: 'USER_LOGIN', user});
       callback();
     }
@@ -110,6 +112,7 @@ export function login(callback: (user: UserState) => any) {
       if (err) {
         return dispatch(openSnackbar('Error logging in: ' + err));
       }
+      user = user || initialState;
       dispatch({type: 'USER_LOGIN', user});
       callback(user);
     }

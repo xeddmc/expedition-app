@@ -3,7 +3,9 @@ import {connect} from 'react-redux'
 import Checkout, {CheckoutStateProps, CheckoutDispatchProps} from './Checkout'
 import {toPrevious} from '../actions/Card'
 import {checkoutSetState} from '../actions/Checkout'
+import {openSnackbar} from '../actions/Snackbar'
 import {authSettings} from '../Constants'
+import {logEvent} from '../React'
 import {AppState, CheckoutPhase, CheckoutState, QuestState, UserState} from '../reducers/StateTypes'
 
 declare var window:any;
@@ -20,8 +22,8 @@ const mapStateToProps = (state: AppState, ownProps: any): CheckoutStateProps => 
 const mapDispatchToProps = (dispatch: Redux.Dispatch<any>, ownProps: any): CheckoutDispatchProps => {
   return {
     onError: (err: string): void => {
-// TODO show to user and report
-console.log(err);
+      logEvent('checkout_err', err);
+      dispatch(openSnackbar('Error encountered: ' + err));
     },
     onHome: (): void => {
       dispatch(toPrevious('QUEST_START', undefined, true));
@@ -33,8 +35,8 @@ console.log(err);
       dispatch(checkoutSetState({phase: 'PROCESSING'}));
       braintree.requestPaymentMethod((err: string, payload: any) => {
         if (err) {
-// TODO show to user and report
-console.log(err);
+          logEvent('checkout_request_err', err);
+          dispatch(openSnackbar('Error encountered: ' + err));
           return dispatch(checkoutSetState({phase: 'ENTRY'}));
         }
         $.post({
@@ -51,12 +53,12 @@ console.log(err);
         })
         .done((response: string) => {
 // TODO what do API errors look like? Show to user and report
+          logEvent('checkout_success', checkout.amount);
           dispatch(checkoutSetState({phase: 'DONE'}));
         })
         .fail((xhr: any, err: string) => {
-          // network error
-  // TODO show to user and report
-console.log(err, xhr);
+          logEvent('checkout_submit_err', err);
+          dispatch(openSnackbar('Error encountered: ' + err));
           dispatch(checkoutSetState({phase: 'ENTRY'}));
         });
       });
