@@ -3,7 +3,7 @@ import {TemplatePhase} from '../cardtemplates/Template'
 import {ParserNode} from '../parser/Node'
 import {GenreType, ContentRatingLabelType} from '../Constants'
 
-export type CheckoutPhase = 'LOADING' | 'ENTRY' | 'DONE';
+export type CheckoutPhase = 'LOADING' | 'ENTRY' | 'PROCESSING'| 'DONE';
 export interface CheckoutState {
   amount: number;
   braintreeToken: string;

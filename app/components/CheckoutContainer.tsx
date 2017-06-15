@@ -30,7 +30,7 @@ console.log(err);
       dispatch(checkoutSetState({phase}));
     },
     onSubmit: (braintree: any, checkout: CheckoutState, user: UserState): void => {
-      dispatch(checkoutSetState({phase: 'LOADING'}));
+      dispatch(checkoutSetState({phase: 'PROCESSING'}));
       braintree.requestPaymentMethod((err: string, payload: any) => {
         if (err) {
 // TODO show to user and report
