@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { shallow } from 'enzyme'
+import {shallow} from 'enzyme'
 import AdvancedPlay, {AdvancedPlayProps} from './AdvancedPlay'
 import {initial_state} from '../reducers/Settings'
 

@@ -1,4 +1,5 @@
 import Redux from 'redux'
+import Fetch from 'node-fetch'
 import {CheckoutBraintreeLoadedAction, CheckoutSetStateAction} from './ActionTypes'
 import {toCard} from './Card'
 import {openSnackbar} from './Snackbar'
@@ -8,7 +9,6 @@ import {logEvent} from '../React'
 import {UserState} from '../reducers/StateTypes'
 
 declare var window:any;
-const braintree = require('braintree-web');
 
 
 export function checkoutSetState(delta: any) {
@@ -17,15 +17,20 @@ export function checkoutSetState(delta: any) {
   };
 }
 
-export function loadBraintreeToken() {
+export function loadBraintreeToken(callback?: (err: string, token?: string) => void) {
   return (dispatch: Redux.Dispatch<any>): any => {
-    $.get(authSettings.urlBase + '/braintree/token')
-        .done((token: string) => {
-          dispatch({type: 'CHECKOUT_BRAINTREE_LOADED', token} as CheckoutBraintreeLoadedAction);
-        })
-        .fail((xhr: any, error: string) => {
-          logEvent('braintree_load_error', error);
-        });
+    callback = callback || (() => {});
+    Fetch(authSettings.urlBase + '/braintree/token')
+    .then((value) => {
+      if (!value.ok) {
+        logEvent('braintree_load_error', value.status);
+        return callback(value.statusText);
+      }
+      value.text().then((token: string) => {
+        dispatch({type: 'CHECKOUT_BRAINTREE_LOADED', token} as CheckoutBraintreeLoadedAction);
+        callback(null, token);
+      });
+    });
   };
 }
 

@@ -2,7 +2,7 @@ import Redux from 'redux'
 import {CheckoutBraintreeLoadedAction, CheckoutSetStateAction} from '../actions/ActionTypes'
 import {CheckoutState} from './StateTypes'
 
-const initialState: CheckoutState = {
+export const initialState: CheckoutState = {
   amount: 0,
   braintreeToken: null,
   phase: 'LOADING',
