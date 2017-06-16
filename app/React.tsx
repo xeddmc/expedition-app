@@ -25,7 +25,11 @@ function setupTapEvents() {
 
 export function logEvent(name: string, args: any): void {
   console.log('Event log: ' + name, args);
-  getWindow().FirebasePlugin.logEvent(name, args);
+  const firebase = getWindow().FirebasePlugin;
+  if (firebase) {
+    firebase.logEvent(name, args);
+  }
+
   const ga = getGA();
   if (ga) {
     const event: any = {
@@ -118,10 +122,6 @@ function setupEventLogging() {
     }, (error: string) => {
       console.error(error);
     });
-  } else {
-    window.FirebasePlugin = {
-      logEvent: (name: string, args: any) => { console.log(name, args); },
-    };
   }
 }
 
@@ -180,10 +180,6 @@ function setupGoogleAnalytics() {
 }
 
 export function init() {
-  // TODO: remove these and have everyone use getPlatform()/getVersion().
-  const window = getWindow();
-  window.platform = 'web';
-
   getDocument().addEventListener('deviceready', () => {
     setupDevice();
   }, false);

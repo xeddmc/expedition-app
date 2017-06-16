@@ -3,6 +3,7 @@ import {connect} from 'react-redux'
 
 import Combat, {CombatStateProps, CombatDispatchProps} from './Combat'
 
+import {logEvent} from '../React'
 import {getEventParameters} from '../../parser/Handlers'
 import {toPrevious, toCard} from '../../actions/Card'
 import {handleCombatTimerStop, tierSumDelta, adventurerDelta, handleCombatEnd} from './Actions'
@@ -12,8 +13,6 @@ import {QuestContext, EventParameters} from '../../reducers/QuestTypes'
 import {CombatPhase, MidCombatPhase} from './State'
 import {ParserNode} from '../../parser/Node'
 import {MAX_ADVENTURER_HEALTH} from '../../Constants'
-
-declare var window:any;
 
 const mapStateToProps = (state: AppStateWithHistory, ownProps: CombatStateProps): CombatStateProps => {
   let maxTier = 0;
@@ -65,11 +64,11 @@ const mapDispatchToProps = (dispatch: Redux.Dispatch<any>, ownProps: any): Comba
       dispatch(toCard('QUEST_CARD', phase));
     },
     onVictory: (node: ParserNode, settings: SettingsType, maxTier: number) => {
-      window.FirebasePlugin.logEvent('combat_victory', {difficulty: settings.difficulty, maxTier: maxTier, players: settings.numPlayers});
+      logEvent('combat_victory', {difficulty: settings.difficulty, maxTier: maxTier, players: settings.numPlayers});
       dispatch(handleCombatEnd(node, settings, true, maxTier));
     },
     onDefeat: (node: ParserNode, settings: SettingsType, maxTier: number) => {
-      window.FirebasePlugin.logEvent('combat_defeat', {difficulty: settings.difficulty, maxTier: maxTier, players: settings.numPlayers});
+      logEvent('combat_defeat', {difficulty: settings.difficulty, maxTier: maxTier, players: settings.numPlayers});
       dispatch(handleCombatEnd(node, settings, false, maxTier));
     },
     onTimerStop: (node: ParserNode, settings: SettingsType, elapsedMillis: number, surge: boolean) => {

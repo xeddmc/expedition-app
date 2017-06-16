@@ -1,6 +1,7 @@
 import Redux from 'redux'
 import {connect} from 'react-redux'
 import QuestEnd, {QuestEndStateProps, QuestEndDispatchProps} from './QuestEnd'
+import {logEvent} from '../React'
 import {toCard, toPrevious} from '../actions/Card'
 import {checkoutSetState, toCheckout} from '../actions/Checkout'
 import {login} from '../actions/User'
@@ -39,10 +40,10 @@ const mapDispatchToProps = (dispatch: Redux.Dispatch<any>, ownProps: any): Quest
         url: 'https://ExpeditionGame.com',
       };
       const onSuccess = function(result: any) {
-        window.FirebasePlugin.logEvent('share', Object.assign({}, quest.details, {app: result.app}));
+        logEvent('share', Object.assign({}, quest.details, {app: result.app}));
       }
       const onError = function(err: string) {
-        window.FirebasePlugin.logEvent('share_error', {error: err});
+        logEvent('share_error', {error: err});
       }
       window.plugins.socialsharing.shareWithOptions(options, onSuccess, onError);
     },
@@ -59,7 +60,7 @@ const mapDispatchToProps = (dispatch: Redux.Dispatch<any>, ownProps: any): Quest
           dispatch(submitUserFeedback(quest, settings, user, userFeedback));
         }
       }
-      window.FirebasePlugin.logEvent('quest_end', quest.details);
+      logEvent('quest_end', quest.details);
       dispatch(toPrevious('QUEST_START', undefined, true));
     },
   };
