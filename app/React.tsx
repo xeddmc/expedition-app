@@ -11,9 +11,10 @@ import {toPrevious} from './actions/Card'
 import {loadBraintreeToken} from './actions/Checkout'
 import {silentLogin} from './actions/User'
 import {getStore} from './Store'
-import {getWindow, getGapi, getGA, getDevicePlatform, getDocument, setGA} from './Globals'
+import {getWindow, getGapi, getDevicePlatform, getDocument} from './Globals'
 
 const injectTapEventPlugin = require('react-tap-event-plugin');
+const ReactGA = require('react-ga');
 
 function setupTapEvents() {
   try {
@@ -30,21 +31,17 @@ export function logEvent(name: string, args: any): void {
     firebase.logEvent(name, args);
   }
 
-  const ga = getGA();
-  if (ga) {
-    const event: any = {
-      hitType: 'event',
-      eventCategory: 'log',
-      eventAction: name,
-    };
-    if (typeof args === 'string') {
-      event.eventLabel = args;
-    }
-    if (typeof args === 'number') {
-      event.eventValue = args;
-    }
-    ga('send', event);
+  const event: any = {
+    category: 'log',
+    action: name,
+  };
+  if (typeof args === 'string') {
+    event.label = args;
   }
+  if (typeof args === 'number') {
+    event.value = args;
+  }
+  ReactGA.event(event);
 }
 
 function setupDevice() {
@@ -147,35 +144,9 @@ function setupHotReload() {
   }
 }
 
-declare var ga: any;
 function setupGoogleAnalytics() {
-  const window = getWindow();
-  const document = getDocument();
-  // Don't enable Google Analytics if we're dev'ing locally
-  if (window.location.hostname === 'localhost') {
-    return;
-  }
-
-  (function(i: any,s: any,o: any,g: any,r: any,a: any,m: any){
-    i['GoogleAnalyticsObject']=r;
-    i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)
-    },
-    i[r].l=1*(new Date() as any);
-    a=s.createElement(o),
-    m=s.getElementsByTagName(o)[0];
-    a.async=1;
-    a.src=g;
-    m.parentNode.insertBefore(a,m);
-  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga',null, null);
-
-  if (typeof ga === 'undefined') {
-    console.log('Could not load GA');
-    return;
-  }
-  setGA(ga);
-  ga('create', 'UA-47408800-9', 'auto');
-  ga('send', 'pageview');
+  ReactGA.initialize('UA-47408800-9');
+  ReactGA.pageview('/');
   console.log('google analytics set up');
 }
 

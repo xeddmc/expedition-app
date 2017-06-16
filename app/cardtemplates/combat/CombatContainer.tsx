@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 
 import Combat, {CombatStateProps, CombatDispatchProps} from './Combat'
 
-import {logEvent} from '../React'
+import {logEvent} from '../../React'
 import {getEventParameters} from '../../parser/Handlers'
 import {toPrevious, toCard} from '../../actions/Card'
 import {handleCombatTimerStop, tierSumDelta, adventurerDelta, handleCombatEnd} from './Actions'
