@@ -1,5 +1,8 @@
 describe('Checkout actions', () => {
 
+  describe('checkoutSetState', () => {
+  });
+
   describe('loadBraintreeToken', () => {
     it('Works without callback specified');
     it('Fires callback with error');

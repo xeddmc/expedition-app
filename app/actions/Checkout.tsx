@@ -21,7 +21,7 @@ export function loadBraintreeToken(callback?: (err: string, token?: string) => v
   return (dispatch: Redux.Dispatch<any>): any => {
     callback = callback || (() => {});
     Fetch(authSettings.urlBase + '/braintree/token')
-    .then((value) => {
+    .then((value: any): any => {
       if (!value.ok) {
         logEvent('braintree_load_error', value.status);
         return callback(value.statusText);

@@ -52,8 +52,8 @@ const mapDispatchToProps = (dispatch: Redux.Dispatch<any>, ownProps: any): Check
           dataType: 'json',
         })
         .done((response: string) => {
-// TODO what do API errors look like? Show to user and report
-// https://github.com/ExpeditionRPG/expedition-app/issues/362
+          // TODO what do API errors look like? Show to user and report
+          // https://github.com/ExpeditionRPG/expedition-app/issues/362
           logEvent('checkout_success', checkout.amount);
           dispatch(checkoutSetState({phase: 'DONE'}));
         })

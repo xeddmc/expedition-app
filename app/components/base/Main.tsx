@@ -49,16 +49,16 @@ export default class Main extends React.Component<MainProps, {}> {
     let card: JSX.Element = null;
     switch(state.card.name) {
       case 'SPLASH_CARD':
-        card = <SplashScreenContainer/>;
+        card = <SplashScreenContainer />;
         break;
       case 'PLAYER_COUNT_SETTING':
-        card = <PlayerCountSettingContainer/>;
+        card = <PlayerCountSettingContainer />;
         break;
       case 'FEATURED_QUESTS':
-        card = <FeaturedQuestsContainer/>;
+        card = <FeaturedQuestsContainer />;
         break;
       case 'QUEST_START':
-        card = <QuestStartContainer/>;
+        card = <QuestStartContainer />;
         break;
       case 'QUEST_CARD':
         if (!state.quest || !state.quest.node) {
@@ -71,10 +71,10 @@ export default class Main extends React.Component<MainProps, {}> {
         }
         break;
       case 'QUEST_END':
-        card = <QuestEndContainer/>;
+        card = <QuestEndContainer />;
         break;
       case 'CHECKOUT':
-        card = <CheckoutContainer/>;
+        card = <CheckoutContainer />;
         break;
       case 'ADVANCED':
         card = <AdvancedPlayContainer />;

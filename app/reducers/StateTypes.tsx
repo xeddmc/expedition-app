@@ -12,6 +12,7 @@ export interface CheckoutState {
   productid: string;
 }
 
+export type CardThemeType = 'LIGHT' | 'RED' | 'DARK';
 export type SettingNameType = 'numPlayers' | 'difficulty' | 'viewMode';
 
 export interface EndSettings {

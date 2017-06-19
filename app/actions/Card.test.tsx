@@ -26,15 +26,8 @@ describe('Card action', () => {
       store.dispatch(toCard('QUEST_CARD'));
       expect(navigator.vibrate).toHaveBeenCalledTimes(0);
     });
-
-    it('returns a NAVIGATE action', () => {
-      expect(toCard('QUEST_CARD')).toEqual(jasmine.objectContaining({'type': 'NAVIGATE'}));
-    });
   });
 
   describe('toPrevious', () => {
-    it('returns a RETURN action', () => {
-      expect(toPrevious('QUEST_CARD')).toEqual(jasmine.objectContaining({'type': 'RETURN'}));
-    });
   });
 });

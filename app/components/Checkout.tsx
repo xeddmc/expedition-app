@@ -34,9 +34,10 @@ export default class Checkout extends React.Component<CheckoutProps, {}> {
     if (this.state.braintreeInstance) { return; }
     dropin.create({
       authorization: this.props.checkout.braintreeToken,
-      container: '#braintreeDropin',
+      container: '#braintreeDropin', // ID selector of the containing element
       // TODO paypal payment not currently working, "No value passed to payment"
       // https://github.com/ExpeditionRPG/expedition-app/issues/362
+      // possible direction? https://stackoverflow.com/questions/44504104/no-value-passed-to-payment
       // paypal: {
       //   flow: 'vault',
       //   amount: this.props.checkout.amount,
