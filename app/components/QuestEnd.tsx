@@ -8,11 +8,12 @@ import Card from './base/Card'
 import Checkbox from './base/Checkbox'
 import StarRating from './base/StarRating'
 
-import {QuestState, SettingsType, UserState, UserFeedbackState} from '../reducers/StateTypes'
+import {CheckoutState, QuestState, SettingsType, UserState, UserFeedbackState} from '../reducers/StateTypes'
 
 declare var window:any;
 
 export interface QuestEndStateProps {
+  checkout: CheckoutState;
   quest: QuestState;
   settings: SettingsType;
   user: UserState;
@@ -23,7 +24,7 @@ export interface QuestEndDispatchProps {
   onChange: (key: string, value: any) => void;
   onShare: (quest: QuestState) => void;
   onSubmit: (quest: QuestState, settings: SettingsType, user: UserState, userFeedback: UserFeedbackState) => void;
-  onTip: (amount: number, quest: QuestState, user: UserState) => void;
+  onTip: (checkoutEnabled: boolean, amount: number, quest: QuestState, user: UserState) => void;
 }
 
 export interface QuestEndProps extends QuestEndStateProps, QuestEndDispatchProps {};
@@ -33,6 +34,7 @@ export default class QuestEnd extends React.Component<QuestEndProps, {}> {
   render() {
     const loggedIn = (this.props.user && this.props.user.loggedIn);
     const rated = (this.props.userFeedback.rating > 0);
+    const checkoutEnabled = (this.props.checkout.braintreeToken !== null);
 
     return (
       <Card title={this.props.quest.details.title}>
@@ -56,15 +58,17 @@ export default class QuestEnd extends React.Component<QuestEndProps, {}> {
           </div>
         }
         Tip the author:
-        <Button onTouchTap={() => this.props.onTip(1, this.props.quest, this.props.user)}>
-          $1
-        </Button>
-        <Button onTouchTap={() => this.props.onTip(3, this.props.quest, this.props.user)}>
-          $3
-        </Button>
-        <Button onTouchTap={() => this.props.onTip(5, this.props.quest, this.props.user)}>
-          $5
-        </Button>
+        <div className={checkoutEnabled ? '' : 'checkoutDisabled'}>
+          <Button onTouchTap={() => this.props.onTip(checkoutEnabled, 1, this.props.quest, this.props.user)}>
+            $1
+          </Button>
+          <Button onTouchTap={() => this.props.onTip(checkoutEnabled, 3, this.props.quest, this.props.user)}>
+            $3
+          </Button>
+          <Button onTouchTap={() => this.props.onTip(checkoutEnabled, 5, this.props.quest, this.props.user)}>
+            $5
+          </Button>
+        </div>
         <Button onTouchTap={() => this.props.onSubmit(this.props.quest, this.props.settings, this.props.user, this.props.userFeedback)}>
           {rated ? 'Submit' : 'Return home'}
         </Button>

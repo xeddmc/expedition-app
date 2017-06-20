@@ -4,6 +4,7 @@ import QuestEnd, {QuestEndStateProps, QuestEndDispatchProps} from './QuestEnd'
 import {logEvent} from '../React'
 import {toCard, toPrevious} from '../actions/Card'
 import {checkoutSetState, toCheckout} from '../actions/Checkout'
+import {openSnackbar} from '../actions/Snackbar'
 import {login} from '../actions/User'
 import {userFeedbackChange} from '../actions/UserFeedback'
 import {submitUserFeedback} from '../actions/Web'
@@ -15,6 +16,7 @@ declare var window:any;
 
 const mapStateToProps = (state: AppState, ownProps: any): QuestEndStateProps => {
   return {
+    checkout: state.checkout,
     quest: state.quest,
     settings: state.settings,
     user: state.user,
@@ -29,9 +31,13 @@ const mapDispatchToProps = (dispatch: Redux.Dispatch<any>, ownProps: any): Quest
       change[key] = value;
       dispatch(userFeedbackChange(change));
     },
-    onTip: (amount: number, quest: QuestState, user: UserState) => {
-      dispatch(checkoutSetState({amount, productcategory: 'Quest Tip', productid: quest.details.id}));
-      dispatch(toCheckout(user, amount));
+    onTip: (checkoutEnabled: boolean, amount: number, quest: QuestState, user: UserState) => {
+      if (!checkoutEnabled) {
+        dispatch(openSnackbar('Error encountered loading checkout'));
+      } else {
+        dispatch(checkoutSetState({amount, productcategory: 'Quest Tip', productid: quest.details.id}));
+        dispatch(toCheckout(user, amount));
+      }
     },
     onShare: (quest: QuestState) => {
       const options = {

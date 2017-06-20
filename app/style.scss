@@ -808,6 +808,13 @@ body {
     display: none;
   }
 
+  .checkoutDisabled {
+    button {
+      color: $font_color_faded !important;
+      border-color: $font_color_faded !important;
+    }
+  }
+
   #braintree {
     [data-braintree-id="choose-a-way-to-pay"],
     [data-braintree-id="toggle"] {
