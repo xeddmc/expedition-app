@@ -815,36 +815,7 @@ body {
     }
   }
 
-  #braintree {
-    [data-braintree-id="choose-a-way-to-pay"],
-    [data-braintree-id="toggle"] {
-      display: none;
-    }
-    #braintreeSubmit button div {
-      text-align: center;
-    }
-    .braintree-option,
-    .braintree-option__label,
-    .braintree-form,
-    .braintree-sheet,
-    .braintree-sheet__label,
-    .braintree-sheet__text,
-    .braintree-method {
-      background: #EEE7C7;
-      font-family: MinionPro, serif;
-      font-size: fontsize(flavor) !important;
-    }
-    .braintree-form__label {
-      font-size: fontsize(label);
-    }
-    /* match Braintree styles */
-    #checkoutTotal {
-      text-align: right;
-      font-size: fontsize(flavor);
-      padding: 12px 10px;
-      // font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
-    }
-  }
+// TODO stripe + checkout styles
 }
 
 @include styling();
