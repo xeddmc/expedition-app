@@ -4,8 +4,8 @@ import {CheckoutState} from './StateTypes'
 
 export const initialState: CheckoutState = {
   amount: 0,
-  braintreeToken: null,
-  phase: 'LOADING',
+  stripe: null,
+  phase: 'ENTRY',
   productcategory: '',
   productid: null,
 };
@@ -13,9 +13,7 @@ export const initialState: CheckoutState = {
 export function checkout(state: CheckoutState = initialState, action: Redux.Action): CheckoutState {
   switch (action.type) {
     case 'CHECKOUT_SET_STATE':
-      return {...state, ...(action as CheckoutSetStateAction)};
-    case 'CHECKOUT_BRAINTREE_LOADED':
-      return {...state, braintreeToken: (action as CheckoutBraintreeLoadedAction).token};
+      return {...state, ...(action as any)};
     default:
       return state;
   }

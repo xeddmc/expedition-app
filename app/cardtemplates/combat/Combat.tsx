@@ -57,8 +57,14 @@ function renderSelectTier(props: CombatProps): JSX.Element {
 function renderDrawEnemies(props: CombatProps): JSX.Element {
   let enemyNames: Set<string> = new Set();
   let repeatEnemy = false;
+  let uniqueEnemy = false;
   let enemies: JSX.Element[] = props.enemies.map((enemy: Enemy, index: number) => {
-    const icon = (enemy.class) ? `<img class="inline_icon" src="images/${enemy.class.replace(REGEX.HTML_TAG, '').toLowerCase()}_white_small.svg"/>` : '';
+    uniqueEnemy = uniqueEnemy || !enemy.class;
+    let icon = null;
+    if (enemy.class) {
+      const iconName = enemy.class.replace(REGEX.HTML_TAG, '').toLowerCase();
+      icon = <img className="inline_icon" src={`images/${iconName}_white_small.svg`} />;
+    }
     if (enemyNames.has(enemy.name)) {
       repeatEnemy = true;
     } else {
@@ -66,7 +72,7 @@ function renderDrawEnemies(props: CombatProps): JSX.Element {
     }
     return (
       <h2 className="combat draw_enemies center" key={index}>
-        {enemy.name} <span className="meta">(Tier {numerals[enemy.tier]} <span dangerouslySetInnerHTML={{__html: icon}}/>)</span>
+        {enemy.name} <span className="meta">(Tier {numerals[enemy.tier]} {icon})</span>
       </h2>
     );
   });
@@ -75,8 +81,12 @@ function renderDrawEnemies(props: CombatProps): JSX.Element {
   if (props.settings.showHelp) {
     helpText = (
       <div>
-        <p>Draw the enemies listed above. Place in the center and put tokens on their maximum health.</p>
-        {repeatEnemy && <p>Since there are multiple of a single enemy, you can use the back of another enemy of the same tier as a placeholder.</p>}
+        <p>Draw the enemies listed above.</p>
+        <ul>
+          {repeatEnemy && <li>Draw extra cards of the appropriate class for the duplicate enemies, and track health using the card backs.</li>}
+          {uniqueEnemy && <li>Draw cards of any class for enemies without class icons. Track health using the back.</li>}
+        </ul>
+        <p>Place these cards in the center and put tokens on their maximum health.</p>
       </div>
     );
   }
@@ -151,16 +161,16 @@ function renderResolve(props: CombatProps): JSX.Element {
     helpText = (
       <span>
         <p>
-          Roll a die for each ability. If <img className="inline_icon" src="images/roll_white_small.svg"></img> &ge; X, the ability succeeds. Abilities may list additional effects based on the roll, even if they fail.
+          Each adventurer rolls a die for the ability they played. If <img className="inline_icon" src="images/roll_white_small.svg"></img> &ge; X, the ability succeeds. Abilities may list additional effects based on the roll, even if they fail.
         </p>
         <p>
           Adventurers may resolve their abilities in any order, and may apply their effects (such as roll and damage modifiers) retroactively to other abilities used this round.
         </p>
         <p>
-          Note that some enemies take more (or less) damage from certain ability types, as specified on their card.
+          Note that some enemies take more or less damage from certain ability types, as specified on their card.
         </p>
         <p>
-          Place all abilities played this round into your discard pile.
+          Discard all abilities played this round.
         </p>
       </span>
     );
@@ -299,10 +309,21 @@ function renderDefeat(props: CombatProps): JSX.Element {
 
 function renderTimerCard(props: CombatProps): JSX.Element {
   const surge = isSurgeRound(props.node);
+  const surgeWarning = (props.settings.difficulty === 'EASY' && surge) ? 'Surge Imminent' : null;
+  let instruction = null;
+  if (props.settings.showHelp) {
+    if (props.settings.multitouch) {
+      instruction = 'All players: hold one finger once you play an ability';
+    } else {
+      instruction = 'Tap the screen once all players have played an ability';
+    }
+  }
+
   return (
     <TimerCard
       theme="DARK"
-      surgeWarning={props.settings.difficulty === 'EASY' ? surge : false}
+      secondaryText={surgeWarning}
+      tertiaryText={instruction}
       numPlayers={(props.settings.multitouch) ? props.numAliveAdventurers : 1}
       roundTimeTotalMillis={props.roundTimeMillis}
       onTimerStop={(ms: number) => props.onTimerStop(props.node, props.settings, ms, surge)} />

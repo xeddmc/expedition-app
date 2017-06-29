@@ -5,7 +5,8 @@ import Card from './base/Card'
 import {authSettings} from '../Constants'
 import {CheckoutState, QuestState, UserState} from '../reducers/StateTypes'
 
-const dropin = require('braintree-web-drop-in');
+declare var Stripe: any;
+
 
 export interface CheckoutStateProps extends React.Props<any> {
   checkout: CheckoutState,
@@ -17,77 +18,79 @@ export interface CheckoutDispatchProps {
   onError: (error: string) => void;
   onHome: () => void;
   onPhaseChange: (phase: string) => void;
-  onSubmit: (braintree: any, checkout: CheckoutState, user: UserState) => void;
+  onStripeLoad: (stripe: any) => void;
+  onSubmit: (stripeToken: string, checkout: CheckoutState, user: UserState) => void;
 }
 
 export interface CheckoutProps extends CheckoutStateProps, CheckoutDispatchProps {}
 
 export default class Checkout extends React.Component<CheckoutProps, {}> {
-  state: { braintreeInstance: any, paymentValid: boolean };
+  state: { card: any, paymentError: string, paymentValid: boolean };
 
   constructor(props: CheckoutProps) {
     super(props);
-    this.state = { braintreeInstance: null, paymentValid: false };
+    this.state = { card: null, paymentError: null, paymentValid: false };
   }
 
-  componentDidMount () {
-    if (this.state.braintreeInstance) { return; }
-    dropin.create({
-      authorization: this.props.checkout.braintreeToken,
-      container: '#braintreeDropin', // ID selector of the containing element
-      // TODO paypal payment not currently working, "No value passed to payment"
-      // https://github.com/ExpeditionRPG/expedition-app/issues/362
-      // possible direction? https://stackoverflow.com/questions/44504104/no-value-passed-to-payment
-      // paypal: {
-      //   flow: 'vault',
-      //   amount: this.props.checkout.amount,
-      //   currency: 'USD',
-      // },
-    }, (err: string, instance: any) => {
-      if (err) {
-        return this.props.onError(err);
-      }
-      instance.on('paymentMethodRequestable', () => { this.setState({ paymentValid: true })});
-      instance.on('noPaymentMethodRequestable', () => { this.setState({ paymentValid: false })});
+  componentDidMount() {
+    if (this.state.card) { return; }
+    let stripe = this.props.checkout.stripe;
+    if (!stripe) {
+// TODO pull this API key a new private config file
+      stripe = Stripe('pk_test_8SATEnwfIx0U2vkomn04kSou');
+      this.props.onStripeLoad(stripe);
+    }
+    const elements = stripe.elements();
+    const card = elements.create('card', {
+      style: {
+        base: {
+          fontSize: '18px',
+          fontFamily: 'MinionPro, serif',
+        },
+      },
+    });
+    card.mount('#stripeCard');
+    this.setState({card});
+
+    card.on('change', (response: any) => {
       this.setState({
-        braintreeInstance: instance,
-        paymentValid: instance.isPaymentMethodRequestable(), // starts valid if existing customer w/ saved payment
+        paymentError: (response.error) ? response.error.message : null,
+        paymentValid: response.complete,
       });
-      this.props.onPhaseChange('ENTRY');
     });
   }
 
+  handleSubmit(event: any) {
+    this.props.checkout.stripe.createToken(this.state.card).then((result: any) => {
+      if (result.error) {
+        this.setState({paymentError: result.error.message});
+      } else {
+        this.props.onSubmit(result.token.id, this.props.checkout, this.props.user);
+      }
+    });
+    event.preventDefault();
+  }
+
   render() {
+    const processing = this.props.checkout.phase === 'PROCESSING';
     switch (this.props.checkout.phase) {
-      case 'LOADING':
-        return (
-          <Card title="Tip the Author">
-            <div id="braintree">
-              <div id="braintreeDropin" className="hidden"></div>
-              <div className="centralMessage">Loading payment form, one moment...</div>
-            </div>
-          </Card>
-        );
       case 'ENTRY':
+      case 'PROCESSING': // keep the same HTML so that React doesn't erase the form
         return (
           <Card title="Tip the Author">
-            <div id="braintree">
-              <div id="braintreeDropin"></div>
-                <div>
-                  <div id="checkoutTotal">Total: ${this.props.checkout.amount.toFixed(2)}</div>
-                  <Button id="braintreeSubmit" disabled={!this.state.paymentValid} onTouchTap={() => this.props.onSubmit(this.state.braintreeInstance, this.props.checkout, this.props.user)}>
-                    {(this.state.paymentValid) ? 'Pay' : 'Enter payment info'}
-                  </Button>
+            <div id="stripe">
+              <form id="stripeForm" action="/charge" method="post" className={processing && 'disabled'}>
+                <div className="form-row">
+                  <p>Please enter your credit or debit card:</p>
+                  <div id="stripeCard"></div>
+                  <div id="stripeErrors" role="alert">{this.state.paymentError}</div>
                 </div>
-            </div>
-          </Card>
-        );
-      case 'PROCESSING':
-        return (
-          <Card title="Tip the Author">
-            <div id="braintree">
-              <div id="braintreeDropin"></div>
-              <div className="centralMessage">Processing payment, one moment...</div>
+                {!processing && <Button id="stripeSubmit" disabled={!this.state.paymentValid} onTouchTap={(e: any) => this.handleSubmit(e)}>
+                  {(this.state.paymentValid) ? 'Pay' : 'Enter payment info'}
+                </Button>}
+                {processing && <div className="centralMessage">Processing payment, one moment...</div>}
+              </form>
+              <label className="footnote">Payments processed by Stripe</label>
             </div>
           </Card>
         );

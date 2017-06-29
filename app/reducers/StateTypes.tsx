@@ -3,13 +3,13 @@ import {TemplatePhase} from '../cardtemplates/Template'
 import {ParserNode} from '../parser/Node'
 import {GenreType, ContentRatingLabelType} from '../Constants'
 
-export type CheckoutPhase = 'LOADING' | 'ENTRY' | 'PROCESSING'| 'DONE';
+export type CheckoutPhase = 'ENTRY' | 'PROCESSING' | 'DONE';
 export interface CheckoutState {
   amount: number;
-  braintreeToken: string;
   phase: CheckoutPhase;
   productcategory: string;
   productid: string;
+  stripe: any;
 }
 
 export type CardThemeType = 'LIGHT' | 'RED' | 'DARK';

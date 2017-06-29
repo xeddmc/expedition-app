@@ -4,13 +4,16 @@ import {NAVIGATION_DEBOUNCE_MS}  from '../Constants'
 
 describe('Card reducer', () => {
   it('Defaults to splash card', () => {
-    expect(card(undefined, {type: 'NO_OP'}).name).toEqual('SPLASH_CARD');
+    expect(card(undefined, {type: 'NO_OP'})).toEqual(jasmine.objectContaining({
+      name: 'SPLASH_CARD',
+    }) as any);
   });
 
   it('Sets state and phase on toCard', () => {
-    const state = card(undefined, toCard('SEARCH_CARD', 'DISCLAIMER'));
-    expect(state.name).toEqual('SEARCH_CARD');
-    expect(state.phase).toEqual('DISCLAIMER');
+    expect(card(undefined, toCard('SEARCH_CARD', 'DISCLAIMER'))).toEqual(jasmine.objectContaining({
+      name: 'SEARCH_CARD',
+      phase: 'DISCLAIMER',
+    }) as any);
   });
 
   it('Does not debounce after some time', () => {
@@ -18,9 +21,13 @@ describe('Card reducer', () => {
     spyOn(Date, 'now').and.callFake(function() {
       return fixedNow;
     });
+
     const state = card(undefined, toCard('SEARCH_CARD'));
-    fixedNow += NAVIGATION_DEBOUNCE_MS + 10;
-    expect(card(state, toCard('QUEST_CARD')).name).toEqual('QUEST_CARD');
+
+    fixedNow += NAVIGATION_DEBOUNCE_MS + 10
+    expect(card(state, toCard('QUEST_CARD'))).toEqual(jasmine.objectContaining({
+      name: 'QUEST_CARD',
+    }) as any);
   });
 
   it('Debounces NAVIGATE actions', () => {
@@ -29,8 +36,10 @@ describe('Card reducer', () => {
       return fixedNow;
     });
     const state = card(undefined, toCard('SEARCH_CARD'));
-    fixedNow += 50; // ms
-    expect(card(state, toCard('QUEST_CARD')).name).toEqual('SEARCH_CARD');
+    fixedNow += 50 // ms
+    expect(card(state, toCard('QUEST_CARD'))).toEqual(jasmine.objectContaining({
+      name: 'SEARCH_CARD',
+    }) as any);
   });
 
   it('Respects overrideDebounce', () => {
@@ -39,7 +48,9 @@ describe('Card reducer', () => {
       return fixedNow;
     });
     const state = card(undefined, toCard('SEARCH_CARD'));
-    fixedNow += 50; // ms
-    expect(card(state, toCard('QUEST_CARD', null, true)).name).toEqual('QUEST_CARD');
-  });
+    fixedNow += 50 // ms
+    expect(card(state, toCard('QUEST_CARD', null, true))).toEqual(jasmine.objectContaining({
+      name: 'QUEST_CARD',
+    }) as any);
+  })
 });

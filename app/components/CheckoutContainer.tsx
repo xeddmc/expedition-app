@@ -31,37 +31,31 @@ const mapDispatchToProps = (dispatch: Redux.Dispatch<any>, ownProps: any): Check
     onPhaseChange: (phase: CheckoutPhase): void => {
       dispatch(checkoutSetState({phase}));
     },
-    onSubmit: (braintree: any, checkout: CheckoutState, user: UserState): void => {
+    onStripeLoad: (stripe: any): void => {
+      dispatch(checkoutSetState({stripe}));
+    },
+    onSubmit: (stripeToken: string, checkout: CheckoutState, user: UserState): void => {
       dispatch(checkoutSetState({phase: 'PROCESSING'}));
-      braintree.requestPaymentMethod((err: string, payload: any) => {
-        if (err) {
-          logEvent('checkout_request_err', err);
-          dispatch(openSnackbar('Error encountered: ' + err));
-          return dispatch(checkoutSetState({phase: 'ENTRY'}));
-        }
-        $.post({
-          url: authSettings.urlBase + '/braintree/checkout',
-          data: JSON.stringify({
-            nonce: payload.nonce,
-            amount: checkout.amount,
-            productcategory: checkout.productcategory,
-            productid: checkout.productid,
-            userid: user.id,
-            useremail: user.email,
-          }),
-          dataType: 'json',
-        })
-        .done((response: string) => {
-          // TODO what do API errors look like? Show to user and report
-          // https://github.com/ExpeditionRPG/expedition-app/issues/362
-          logEvent('checkout_success', checkout.amount);
-          dispatch(checkoutSetState({phase: 'DONE'}));
-        })
-        .fail((xhr: any, err: string) => {
-          logEvent('checkout_submit_err', err);
-          dispatch(openSnackbar('Error encountered: ' + err));
-          dispatch(checkoutSetState({phase: 'ENTRY'}));
-        });
+      $.post({
+        url: authSettings.urlBase + '/stripe/checkout',
+        data: JSON.stringify({
+          token: stripeToken,
+          amount: checkout.amount,
+          productcategory: checkout.productcategory,
+          productid: checkout.productid,
+          userid: user.id,
+          useremail: user.email,
+        }),
+        dataType: 'json',
+      })
+      .done((response: string) => {
+        logEvent('checkout_success', checkout.amount);
+        dispatch(checkoutSetState({phase: 'DONE'}));
+      })
+      .fail((xhr: any, err: string) => {
+        logEvent('checkout_submit_err', err);
+        dispatch(openSnackbar('Error encountered: ' + err));
+        dispatch(checkoutSetState({phase: 'ENTRY'}));
       });
     },
   };

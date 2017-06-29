@@ -8,7 +8,6 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import {authSettings} from './Constants'
 import {toPrevious} from './actions/Card'
-import {loadBraintreeToken} from './actions/Checkout'
 import {silentLogin} from './actions/User'
 import {getStore} from './Store'
 import {getWindow, getGapi, getDevicePlatform, getDocument} from './Globals'
@@ -160,7 +159,6 @@ export function init() {
   setupEventLogging();
   setupHotReload();
   setupGoogleAnalytics();
-  getStore().dispatch(loadBraintreeToken());
 
   render();
 }

@@ -34,7 +34,8 @@ export default class QuestEnd extends React.Component<QuestEndProps, {}> {
   render() {
     const loggedIn = (this.props.user && this.props.user.loggedIn);
     const rated = (this.props.userFeedback.rating > 0);
-    const checkoutEnabled = (this.props.checkout.braintreeToken !== null);
+    // TODO develop new system for letting the app know when payments are offline
+    const checkoutEnabled = true;
 
     return (
       <Card title={this.props.quest.details.title}>

@@ -17,23 +17,6 @@ export function checkoutSetState(delta: any) {
   };
 }
 
-export function loadBraintreeToken(callback?: (err: string, token?: string) => void) {
-  return (dispatch: Redux.Dispatch<any>): any => {
-    callback = callback || (() => {});
-    Fetch(authSettings.urlBase + '/braintree/token')
-    .then((value: any): any => {
-      if (!value.ok) {
-        logEvent('braintree_load_error', value.status);
-        return callback(value.statusText);
-      }
-      value.text().then((token: string) => {
-        dispatch({type: 'CHECKOUT_BRAINTREE_LOADED', token} as CheckoutBraintreeLoadedAction);
-        callback(null, token);
-      });
-    });
-  };
-}
-
 export function toCheckout(user: UserState, amount: number) {
   return (dispatch: Redux.Dispatch<any>): any => {
     if (!user.loggedIn) {
