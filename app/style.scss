@@ -826,6 +826,11 @@ body {
   }
 
   #stripe {
+    #stripeErrors {
+      color: $bg_red_primary;
+      text-align: center;
+      padding-top: size(small);
+    }
     .footnote {
       position: fixed;
       bottom: size(base);
