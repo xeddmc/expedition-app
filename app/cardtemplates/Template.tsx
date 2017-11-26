@@ -75,6 +75,10 @@ export function defaultContext(): TemplateContext {
         const settings = getStore().getState().settings;
         return settings && settings.contentSets;
       },
+      hasTheHorror: function(): boolean {
+        const settings = getStore().getState().settings;
+        return settings && settings.contentSets && settings.contentSets.horror;
+      },
       numAdventurers: function(): number {
         const settings = getStore().getState().settings;
         return settings && settings.numPlayers;
