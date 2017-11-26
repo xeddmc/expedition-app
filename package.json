@@ -1,6 +1,6 @@
 {
   "name": "expedition-app",
-  "version": "1.9.1",
+  "version": "1.10.2",
   "description": "The App for Expedition: The Roleplaying Card Game",
   "homepage": "http://expeditiongame.com",
   "bugs": "https://github.com/ExpeditionRPG/expedition-app/issues",
@@ -104,7 +104,6 @@
     "emitter-steward": "^1.0.0",
     "es6-promise-plugin": "^4.1.0",
     "escape-string-regexp": "^1.0.4",
-    "expedition-art": "git+https://github.com/ExpeditionRPG/expedition-art.git",
     "expedition-qdl": "git+https://github.com/ExpeditionRPG/expedition-qdl.git#7fddbf9c8cb3e24f83f4882f3e84e831eb635c8b",
     "findup-sync": "^0.4.3",
     "firebase": "^4.6.1",
@@ -113,7 +112,7 @@
     "material-ui": "^0.19.0",
     "mathjs": "^3.16.4",
     "moment": "^2.18.1",
-    "node-sass": "^4.5.3",
+    "node-sass": "^4.7.2",
     "nomnom": "^1.8.1",
     "parser": "^0.1.4",
     "promise-polyfill": "^6.0.2",
@@ -130,17 +129,19 @@
     "redux-thunk": "^2.1.0",
     "resp-modifier": "^6.0.0",
     "seedrandom": "^2.4.3",
-    "send": "^0.14.2",
+    "send": "^0.16.0",
     "serve-index": "^1.7.3",
     "serve-static": "^1.10.2",
     "serve-waterfall": "^1.1.1",
-    "snyk": "^1.44.1",
-    "socket.io": "^1.4.5",
+    "snyk": "^1.49.3",
     "strip-ansi": "^3.0.0",
     "ucfirst": "^1.0.0",
     "update": "^0.7.4",
     "whatwg-fetch": "^2.0.3",
     "xtend": "^4.0.1"
+  },
+  "optionalDependencies": {
+    "expedition-art": "git+https://github.com/ExpeditionRPG/expedition-art.git"
   },
   "cordova": {
     "plugins": {

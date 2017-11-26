@@ -3,12 +3,15 @@
     <p>Custom setup card, replacing the default quest setup card. Half and full-width art:</p>
     <p>[roll]</p>
     <p>[hound_of_tindalos_full]</p>
+    <p>[darker_at_dawn_png_full]</p>
   </roleplay>
   <roleplay title="Test" id="start" data-line="6">
     <p>{{one=1}}</p>
     <p>{{foo=='a'}}</p>
     <p>You should see an error notification, but everything should work.</p>
-    <p>You face choices. Here's the value of one: {{one}}. And a symbol: ☞ and an icon :roll:</p>
+    <p>You face choices. Here's the value of one: {{one}}. And a symbol: ☞ and an icon :roll:. There should be one paragraph after this one:</p>
+    <p>{{1==1}} Paragraph one (and only).</p>
+    <p>{{2==1}} Paragraph two, should not be visible!</p>
     <choice text=":fae: Fight">
       <combat data-line="18">
         <e>Thief</e>
