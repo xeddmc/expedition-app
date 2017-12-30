@@ -140,7 +140,7 @@ export default class Audio extends React.Component<AudioProps, {}> {
     }
 
     // AUDIO COMMANDS. Ignore if old or duplicate (aka from going back, or settings change)
-    if (nextProps.audio.timestamp <= this.lastCommandTimestamp + AUDIO_COMMAND_DEBOUNCE_MS) {
+    if (AUDIO_COMMAND_DEBOUNCE_MS > Math.abs(nextProps.audio.timestamp - this.lastCommandTimestamp)) {
       return;
     }
     this.lastCommandTimestamp = nextProps.audio.timestamp;
@@ -365,7 +365,7 @@ export default class Audio extends React.Component<AudioProps, {}> {
     const fadeSeconds = (this.intensity > 0) ? MUSIC_FADE_SECONDS : MUSIC_FADE_LONG_SECONDS;
     for (let i = 0; i < this.musicNodes.length; i++) {
       const track = this.musicNodes[i];
-      if (track.source.playbackState === track.source.PLAYING_STATE) {
+      if (track && track.source && track.source.playbackState === track.source.PLAYING_STATE) {
         track.gain.gain.linearRampToValueAtTime(0, this.ctx.currentTime + fadeSeconds); // Fade out
         track.source.stop = track.source.stop || track.source.noteOff; // polyfill for old browsers
         track.source.stop(this.ctx.currentTime + fadeSeconds);
