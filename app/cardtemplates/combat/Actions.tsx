@@ -456,7 +456,7 @@ export const midCombatChoice = remoteify(function midCombatChoice(a: MidCombatCh
     // interestitial roleplay. Go back to combat resolution phase.
     dispatch({type: 'PUSH_HISTORY'});
     dispatch({type: 'QUEST_NODE', node: new ParserNode(parentCombatElem, a.node.ctx)} as QuestNodeAction);
-    dispatch(toCard({name: 'QUEST_CARD', phase: 'RESOLVE_ABILITIES', overrideDebounce: true}));
+    dispatch(toCard({name: 'QUEST_CARD', phase: 'RESOLVE_ABILITIES', overrideDebounce: true, noHistory: true}));
   }
   return remoteArgs;
 });
